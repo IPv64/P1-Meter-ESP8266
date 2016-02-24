@@ -88,6 +88,64 @@ void setup() {
   Serial.println(WiFi.localIP());
 }
 
+void SendToPimatic() {
+  
+  String yourdata;
+
+  char host_char_array[host.length()+1];
+  host.toCharArray(host_char_array,host.length()+1);
+  
+  if (!client.connect(host_char_array, httpPort)) {
+    Serial.println("connection failed");
+    return;
+  }
+  
+  // calculate Base64Login
+  memset(authVal,0,40);
+  (Username + String(":") + Password).toCharArray(authVal, 40);
+  memset(authValEncoded,0,40);
+  base64_encode(authValEncoded, authVal, (Username + String(":") + Password).length());
+  
+//  char base64login[40];
+  
+//  (Username + String(":") + Password).toCharArray(base64login, 40);
+  
+  //Send Humidity
+  yourdata = "{\"type\": \"value\", \"valueOrExpression\": \"" + String(mEAV) + "\"}";
+  
+  
+    client.print("PATCH /api/variables/");
+    client.print("mEAV-mGAS HTTP/1.1\r\n");
+    client.print("Authorization: Basic ");
+    client.print(authValEncoded);
+    client.print("\r\n");
+    client.print("Host: " + host +"\r\n");
+    client.print("Content-Type:application/json\r\n");
+    client.print("Content-Length: ");
+    client.print(yourdata.length());
+    client.print("\r\n\r\n");
+    client.print(yourdata);
+    
+  delay(500);
+  
+  //Send Temperature
+  yourdata = "{\"type\": \"value\", \"valueOrExpression\": \"" + String(mGAS) + "\"}";
+    
+    client.print("PATCH /api/variables/");
+    client.print("espP1-mGAS HTTP/1.1\r\n");
+    client.print("Authorization: Basic ");
+    client.print(authValEncoded);
+    client.print("\r\n");
+    client.print("Host: " + host +"\r\n");
+    client.print("Content-Type:application/json\r\n");
+    client.print("Content-Length: ");
+    client.print(yourdata.length());
+    client.print("\r\n\r\n");
+    client.print(yourdata);
+  
+  
+}
+
 
 bool SendToDomo(int idx, int nValue, char* sValue)
 {
