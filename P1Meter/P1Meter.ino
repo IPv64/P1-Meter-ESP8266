@@ -88,7 +88,7 @@ void setup() {
   Serial.println(WiFi.localIP());
 }
 
-void SendToPimatic() {
+void SendToPimatic(String data, String sensorname) {
   
   String yourdata;
 
@@ -111,39 +111,28 @@ void SendToPimatic() {
 //  (Username + String(":") + Password).toCharArray(base64login, 40);
   
   //Send Humidity
-  yourdata = "{\"type\": \"value\", \"valueOrExpression\": \"" + String(mEAV) + "\"}";
+  yourdata = "{\"type\": \"value\", \"valueOrExpression\": \"" + String(data) + "\"}";  
   
+  client.print("PATCH /api/variables/");
+  client.print("sensor");
+  client.print(" HTTP/1.1\r\n");
+  client.print("Authorization: Basic ");
+  client.print(authValEncoded);
+  client.print("\r\n");
+  client.print("Host: " + host +"\r\n");
+  client.print("Content-Type:application/json\r\n");
+  client.print("Content-Length: ");
+  client.print(yourdata.length());
+  client.print("\r\n\r\n");
+  client.print(yourdata);
   
-    client.print("PATCH /api/variables/");
-    client.print("mEAV-mGAS HTTP/1.1\r\n");
-    client.print("Authorization: Basic ");
-    client.print(authValEncoded);
-    client.print("\r\n");
-    client.print("Host: " + host +"\r\n");
-    client.print("Content-Type:application/json\r\n");
-    client.print("Content-Length: ");
-    client.print(yourdata.length());
-    client.print("\r\n\r\n");
-    client.print(yourdata);
+  delay(250);
+
+  while (client.available()) {
+  String line = client.readStringUntil('\r');
+  //Serial.print(line);
+  }
     
-  delay(500);
-  
-  //Send Temperature
-  yourdata = "{\"type\": \"value\", \"valueOrExpression\": \"" + String(mGAS) + "\"}";
-    
-    client.print("PATCH /api/variables/");
-    client.print("espP1-mGAS HTTP/1.1\r\n");
-    client.print("Authorization: Basic ");
-    client.print(authValEncoded);
-    client.print("\r\n");
-    client.print("Host: " + host +"\r\n");
-    client.print("Content-Type:application/json\r\n");
-    client.print("Content-Length: ");
-    client.print(yourdata.length());
-    client.print("\r\n\r\n");
-    client.print(yourdata);
-  
-  
 }
 
 
@@ -152,7 +141,9 @@ bool SendToDomo(int idx, int nValue, char* sValue)
   HTTPClient http;
   bool retVal = false;
   char url[255];
-  sprintf(url, "http://%s:%d/json.htm?type=command&param=udevice&idx=%d&nvalue=%d&svalue=%s", domoticzIP, domoticzPort, idx, nValue, sValue);
+//  sprintf(url, "http://%s:%d/json.htm?type=command&param=udevice&idx=%d&nvalue=%d&svalue=%s", domoticzIP, domoticzPort, idx, nValue, sValue);
+
+  
   Serial.printf("[HTTP] GET... URL: %s\n",url);
   http.begin(url); //HTTP
   int httpCode = http.GET();
