@@ -13,3 +13,6 @@ You need to connect the smart meter with a RJ11 connector. This is the pinout to
 ![RJ11 P1 connetor](http://gejanssen.com/howto/Slimme-meter-uitlezen/RJ11-pinout.png)
 
 Connect GND->GND on ESP, RTS->3.3V on ESP and RxD->any digital pin on ESP. In this sketch I use D5
+
+
+Warning! This repository is not actively maintained!
