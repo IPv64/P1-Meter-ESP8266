@@ -1,3 +1,5 @@
+## !!!Warning!!! This repository is not actively maintained! !!!Warning!!!
+
 # P1-Meter-ESP8266
 Software for the ESP2866 that sends P1 smart meter data to pimatic (with CRC checking and OTA firmware updates)
 
@@ -15,4 +17,4 @@ You need to connect the smart meter with a RJ11 connector. This is the pinout to
 Connect GND->GND on ESP, RTS->3.3V on ESP and RxD->any digital pin on ESP. In this sketch I use D5
 
 
-Warning! This repository is not actively maintained!
+!!!Warning!!! This repository is not actively maintained! !!!Warning!!!
